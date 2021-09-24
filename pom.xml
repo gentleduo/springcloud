@@ -17,11 +17,17 @@
            一般来说所有的父级项目的packaging都为pom，packaging默认类型jar类型，如果不做配置，maven会将该项目打成jar包-->
     <packaging>pom</packaging>
 
-    <!--添加子模块标识 !!!! -->
+    <!-- 聚合项目和父子项目是两个概念-->
+    <!--聚合项目中父级项目中通过modules将子项目包含进来，父级项目在进行compile,package,install,deploy等项目构建的时候，会把所有的子项目都进行相应的构建-->
+    <!--父子项目是通过在子项目中添加parent标签来建立项目之间的依赖关系，实现统一的依赖管理及控制插件的版本-->
+    <!--一般在生产环境中，会将两种方式结合起来使用-->
+
+    <!--聚合项目中：子项目模块 -->
     <modules>
         <!--声明 eureka_server 为当前项目 子模块 ，以后有新的子模块添加也要在此添加-->
         <module>eureka_server</module>
         <module>producer_service</module>
+        <module>consumer_service</module>
     </modules>
 
     <properties>
@@ -29,6 +35,13 @@
         <spring-cloud.version>2020.0.3</spring-cloud.version>
     </properties>
 
+    <!--父项目中的基本依赖，所有的子项目都会继承-->
+    <dependencies></dependencies>
+
+    <!--父项目中的统一管理的依赖：依赖容器，在子项目中使用的时候才会引入-->
+    <!-- dependencyManagement里只是声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。-->
+    <!--如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，-->
+    <!--并且version和scope都读取自父pom;另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。-->
     <dependencyManagement>
         <dependencies>
             <dependency>
